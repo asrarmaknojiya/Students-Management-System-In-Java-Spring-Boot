@@ -4,11 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public class BasicCURD<E, ID> implements CURD<E, ID> {
+public class BasicCRUD<E, ID> implements CRUD<E, ID> {
 
     protected JpaRepository<E, ID> repo;
 
-    public BasicCURD(JpaRepository<E, ID> repo) {
+    public BasicCRUD(JpaRepository<E, ID> repo) {
         this.repo = repo;
     }
 

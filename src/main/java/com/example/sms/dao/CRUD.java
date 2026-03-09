@@ -2,7 +2,7 @@ package com.example.sms.dao;
 
 import java.util.List;
 
-public interface CURD<E, ID> {
+public interface CRUD<E, ID> {
 
     E save(E entity);
 

@@ -21,12 +21,29 @@ public class StudentController {
 
     @GetMapping("/get-all")
     public ResponseModel getAllStudents(@RequestParam(required = false, defaultValue = "1") int pageNo,
-                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
         return studentService.getAllStudents(pageSize, pageNo);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/by/{id}")
     public ResponseModel getStudentsById(@PathVariable String id) {
         return studentService.findStudentById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseModel updateStudentById(@PathVariable String id, @RequestBody StudentDTO dto) {
+        return studentService.updateTheStudent(id, dto);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseModel deleteStudent(@PathVariable String id) {
+        return studentService.deleteStudentById(id);
+    }
+
+    @GetMapping("/search")
+    public ResponseModel searchStudent(@RequestParam String keywords,
+                                       @RequestParam(required = false, defaultValue = "1") int pageNo,
+                                       @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        return studentService.searchStudent(keywords, pageSize, pageNo);
     }
 }

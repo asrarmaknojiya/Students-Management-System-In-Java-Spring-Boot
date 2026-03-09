@@ -7,6 +7,7 @@ public class APIMessage {
     public static final String STUDENT_FOUND = "Student Found";
     public static final String STUDENT_CREATED = "Student Created";
     public static final String STUDENT_UPDATED = "Student Updated";
+    public static final String STUDENT_DELETED = "Student Deleted";
     public static final String STUDENT_ALREADY_PRESENT = "Student With Same %s Already Exists";
 
     // -----------------END-------------------

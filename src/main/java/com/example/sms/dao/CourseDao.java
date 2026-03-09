@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class CourseDao extends BasicCURD<Course, String> {
+public class CourseDao extends BasicCRUD<Course, String> {
 
     @Autowired
     private CourseRepo courseRepo;
