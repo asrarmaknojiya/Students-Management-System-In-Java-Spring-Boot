@@ -57,4 +57,28 @@ public class StudentDTO {
                 entity.getStatus()
         );
     }
+
+    public Student toUpdateEntity(Student entity) {
+
+        if (this.fName != null) {
+            entity.setFirstName(this.fName);
+        }
+        if (this.lName != null) {
+            entity.setLastName(this.lName);
+        }
+        if (this.email != null) {
+            entity.setEmail(this.email);
+        }
+        if (this.phoneNo != null) {
+            entity.setPhoneNo(this.phoneNo);
+        }
+        if (this.DOB != null) {
+            entity.setDOB(this.DOB);
+        }
+        if (this.gender != null) {
+            entity.setGender(this.gender);
+        }
+
+        return entity;
+    }
 }
