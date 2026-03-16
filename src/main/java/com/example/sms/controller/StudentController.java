@@ -41,10 +41,10 @@ public class StudentController {
     }
 
     @GetMapping("/search")
-    public ResponseModel searchStudent(@RequestParam String keywords,
+    public ResponseModel searchStudent(@RequestParam String searchkeywords,
                                        @RequestParam(required = false, defaultValue = "1") int pageNo,
                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return studentService.searchStudent(keywords, pageSize, pageNo);
+        return studentService.searchStudent(searchkeywords, pageSize, pageNo);
     }
 
 

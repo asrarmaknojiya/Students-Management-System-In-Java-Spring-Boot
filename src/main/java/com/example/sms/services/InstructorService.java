@@ -3,11 +3,20 @@ package com.example.sms.services;
 import com.example.sms.dao.InstructorDao;
 import com.example.sms.dto.InstructorDTO;
 import com.example.sms.dto.ResponseModel;
+import com.example.sms.dto.StudentDTO;
 import com.example.sms.entity.Instructor;
+import com.example.sms.entity.enums.Status;
 import com.example.sms.util.APIMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -43,6 +52,103 @@ public class InstructorService {
                 APIMessage.INSTRUCTOR_CREATED,
                 InstructorDTO.toDTO(instructor)
         );
+    }
+
+    public ResponseModel getAllInstructor(int pageSize, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+        Page<Instructor> instructors = instructorDao.findAllByStatus(Status.ACTIVE, pageable);
+        List<InstructorDTO> dtos = instructors.getContent()
+                .stream()
+                .map(InstructorDTO::toDTO)
+                .toList();
+
+        Map<String, Object> pageResult = new HashMap<>();
+        pageResult.put("page Size", pageSize);
+        pageResult.put("page No", pageNo);
+        pageResult.put("total Count", instructors.getTotalElements());
+        pageResult.put("total Records", instructors.getTotalPages());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", dtos);
+        result.put("pageResult", pageResult);
+
+
+        return ResponseModel.success(APIMessage.STUDENT_FOUND, result);
+
+    }
+
+
+    public ResponseModel getInstructorById(String id) {
+        Instructor instructor = instructorDao.findById(id);
+        if (instructor == null) {
+            return ResponseModel.not_found(APIMessage.INSTRUCTOR_NOT_FOUND, null);
+        }
+
+        return ResponseModel.success(APIMessage.INSTRUCTOR_FOUND, InstructorDTO.toDTO(instructor));
+    }
+
+    public ResponseModel updateInstructor(String id, InstructorDTO dto) {
+        Instructor instructor = instructorDao.findById(id);
+        if (instructor == null) {
+            return ResponseModel.not_found(APIMessage.INSTRUCTOR_NOT_FOUND, null);
+        }
+
+        Boolean instructorExist = instructorDao.existInstructorByEmail(dto.getEmail());
+        if (instructorExist) {
+            return ResponseModel.conflict(APIMessage.INSTRUCTOR_ALREADY_PRESENT.formatted("Email"),
+                    null);
+        }
+
+        instructorExist = instructorDao.existInstructorByPhoneNo(dto.getPhoneNo());
+        if (instructorExist) {
+            return ResponseModel.conflict(APIMessage.INSTRUCTOR_ALREADY_PRESENT.formatted("Phone"),
+                    null);
+        }
+
+        instructor = dto.toUpdateEntity(instructor);
+        instructor = instructorDao.save(instructor);
+        return ResponseModel.success(
+                APIMessage.INSTRUCTOR_UPDATED,
+                InstructorDTO.toDTO(instructor)
+        );
+    }
+
+    public ResponseModel deleteInstructor(String id) {
+        Instructor instructor = instructorDao.findById(id);
+        if (instructor == null) {
+            return ResponseModel.not_found(APIMessage.INSTRUCTOR_NOT_FOUND, null);
+        }
+
+        instructor.setStatus(Status.DELETED);
+        instructorDao.save(instructor);
+        return ResponseModel.success(
+                APIMessage.INSTRUCTOR_DELETED, InstructorDTO.toDTO(instructor)
+        );
+    }
+
+    public ResponseModel searchInstructor(String searchkeywords,int pageSize,int pageNo){
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+        Page<Instructor> instructors=instructorDao.searchInstructorByStatus(searchkeywords,Status.ACTIVE,pageable);
+
+        List<InstructorDTO> dtos = instructors.getContent()
+                .stream()
+                .map(InstructorDTO::toDTO)
+                .toList();
+
+        Map<String, Object> pageResult = new HashMap<>();
+        pageResult.put("page Size", pageSize);
+        pageResult.put("page No", pageNo);
+        pageResult.put("total Count", instructors.getTotalElements());
+        pageResult.put("total Records", instructors.getTotalPages());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", dtos);
+        result.put("pageResult", pageResult);
+        return ResponseModel.success(APIMessage.STUDENT_FOUND, result);
+
+
     }
 
 
