@@ -15,3 +15,5 @@ public interface CRUD<E, ID> {
     List<E> findAll();
 
 }
+
+

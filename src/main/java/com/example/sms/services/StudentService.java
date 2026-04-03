@@ -5,7 +5,10 @@ import com.example.sms.dto.ResponseModel;
 import com.example.sms.dto.StudentDTO;
 import com.example.sms.entity.Student;
 import com.example.sms.entity.enums.Status;
+import com.example.sms.exception.DuplicateExceptionResource;
+import com.example.sms.exception.NotFoundExceptionResource;
 import com.example.sms.util.APIMessage;
+import com.example.sms.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,18 +29,12 @@ public class StudentService {
 
         Boolean studentExists = studentDao.existsStudentByEmail(dto.getEmail());
         if (studentExists) {
-            return ResponseModel.conflict(
-                    APIMessage.STUDENT_ALREADY_PRESENT.formatted("Email"),
-                    null
-            );
+           throw new DuplicateExceptionResource(  APIMessage.STUDENT_ALREADY_PRESENT.formatted("Email"));
         }
 
         studentExists = studentDao.existsStudentByPhoneNo(dto.getPhoneNo());
         if (studentExists) {
-            return ResponseModel.conflict(
-                    APIMessage.STUDENT_ALREADY_PRESENT.formatted("PhoneNo"),
-                    null
-            );
+           throw new DuplicateExceptionResource(APIMessage.STUDENT_ALREADY_PRESENT.formatted("PhoneNo"));
         }
 
         Student student = dto.toEntity();
@@ -60,16 +57,12 @@ public class StudentService {
                 .toList();
 
 
-        Map<String, Object> pageResult = new HashMap<>();
-        pageResult.put("pageSize", pageSize);
-        pageResult.put("pageNo", pageNo);
-        pageResult.put("totalRecords", students.getTotalElements());
-        pageResult.put("pageCount", students.getTotalPages());
+
 
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", dtos);
-        result.put("pageResult", pageResult);
+        result.put("pageResult", Utils.preparePageResult(students));
 
         return ResponseModel.success(
                 APIMessage.STUDENT_FOUND,
@@ -82,10 +75,9 @@ public class StudentService {
         Student student = studentDao.findById(studentId);
 
         if (student == null) {
-            return ResponseModel.not_found(
-                    APIMessage.STUDENT_NOT_FOUND,
-                    null
-            );
+
+                throw new NotFoundExceptionResource( APIMessage.STUDENT_NOT_FOUND);
+
         }
         return ResponseModel.success(
                 APIMessage.STUDENT_FOUND,
@@ -98,10 +90,7 @@ public class StudentService {
 
         Student student = studentDao.findById(id);
         if (student == null) {
-            ResponseModel.not_found(
-                    APIMessage.STUDENT_NOT_FOUND,
-                    null
-            );
+           throw new NotFoundExceptionResource( APIMessage.STUDENT_NOT_FOUND);
         }
 
         Boolean studentExists = studentDao.existsStudentByEmail(dto.getEmail());

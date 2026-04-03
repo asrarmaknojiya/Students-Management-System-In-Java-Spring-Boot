@@ -18,9 +18,8 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @PostMapping("/insert")
-    public ResponseModel insertCourse(@RequestBody DepartmentDTO dto) {
-        log.info("insertDepartment API Triggered");
-        return departmentService.insertDepartment(dto);
+    public ResponseModel insertDepartment(@RequestBody DepartmentDTO dto) {
+        return departmentService.insetDepartment(dto);
     }
 
     @GetMapping("/get-all")
@@ -28,29 +27,22 @@ public class DepartmentController {
                                            @RequestParam(required = false, defaultValue = "1") int pageNo) {
         return departmentService.getAllDepartment(pageSize, pageNo);
     }
-
-    @GetMapping("/by/{departmentId}")
-    public ResponseModel getDepartmentById(@PathVariable String departmentId) {
+    @GetMapping("get/by/{departmentId}")
+    public ResponseModel getDepartmentById(@PathVariable String departmentId){
         return departmentService.getDepartmentById(departmentId);
+    }
+
+    @DeleteMapping("/delete/{departmentId}")
+    public ResponseModel deleteDepartment(@PathVariable String departmentId) {
+        return departmentService.deleteDepartmentById(departmentId);
     }
 
     @PutMapping("/update/by/{departmentId}")
     public ResponseModel updateDepartmentById(@PathVariable String departmentId,
-                                              @RequestBody DepartmentDTO dto) {
-        return departmentService.updateById(departmentId, dto);
+                                              @RequestBody DepartmentDTO dto){
+        return departmentService.updateDepartmentById(departmentId,dto);
     }
 
-    @DeleteMapping("/delete/by/{departmentId}")
-    public ResponseModel deleteByDepartmentId(@PathVariable String departmentId) {
-        return departmentService.deleteById(departmentId);
-    }
-
-    @GetMapping("/search")
-    public ResponseModel searchDepartment(@RequestParam String serachKeyword,
-                                          @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                          @RequestParam(required = false, defaultValue = "1") int pageNo) {
-        return departmentService.searchDepartment(serachKeyword, pageSize, pageNo);
-    }
 
 
 }

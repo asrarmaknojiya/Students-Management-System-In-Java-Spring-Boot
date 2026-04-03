@@ -31,9 +31,13 @@ public class Course {
 
     private LocalDate createdOn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_Id")
     private Instructor instructorId;
+
+    private int maxEnrollment;
+
+    private int currentEnrollment;
 
     @PrePersist
     public void prePersist() {

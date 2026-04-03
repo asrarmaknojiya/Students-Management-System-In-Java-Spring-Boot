@@ -3,6 +3,7 @@ package com.example.sms.dto;
 import com.example.sms.entity.Department;
 import com.example.sms.entity.Instructor;
 import com.example.sms.entity.enums.Status;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 public class DepartmentDTO {
 
+
     private String departmentId;
     private String departmentName;
     private Status status;
-    private String hodId;
-    private List<String> instructorIds;
+    private String HOD;
+    private List<String> instructors;
 
     public Department toEntity(Instructor hod, List<Instructor> instructors) {
         return Department.builder()
@@ -32,16 +34,16 @@ public class DepartmentDTO {
     }
 
     public static DepartmentDTO toDTO(Department department) {
-
         String hodId = null;
         if (department.getHOD() != null) {
             hodId = department.getHOD().getInstructorId();
+
         }
 
-        List<String> instructorIds = new ArrayList<>();
+        List<String> instructorsIds = new ArrayList<>();
         if (department.getInstructors() != null) {
             for (Instructor instructor : department.getInstructors()) {
-                instructorIds.add(instructor.getInstructorId());
+                instructorsIds.add(instructor.getInstructorId());
             }
         }
 
@@ -49,25 +51,26 @@ public class DepartmentDTO {
                 .departmentId(department.getDepartmentId())
                 .departmentName(department.getDepartmentName())
                 .status(department.getStatus())
-                .hodId(hodId)
-                .instructorIds(instructorIds)
+                .HOD(hodId)
+                .instructors(instructorsIds)
                 .build();
     }
 
-    public Department toUpdateEntity(Department entity, Instructor hod, List<Instructor> instructors) {
-        if (this.departmentName != null) {
-            entity.setDepartmentName(this.departmentName);
+
+    public Department toUpdateEntity(Department department,Instructor hod,List<Instructor> instructors){
+        if (this.departmentName !=null){
+            department.setDepartmentName(this.departmentName);
         }
-        if (this.status != null) {
-            entity.setStatus(this.status);
+        if (this.status !=null){
+            department.setStatus(this.status);
         }
-        if (hod != null) {
-            entity.setHOD(hod);
+        if (hod !=null){
+            department.setHOD(hod);
         }
-        if (instructors != null && !instructors.isEmpty()) {
-            entity.setInstructors(instructors);
+        if (instructors !=null && instructors.isEmpty()){
+            department.setInstructors(instructors);
         }
-        return entity;
+        return department;
     }
 
 

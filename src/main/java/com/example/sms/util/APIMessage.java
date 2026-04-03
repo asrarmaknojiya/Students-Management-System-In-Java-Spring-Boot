@@ -39,4 +39,17 @@ public class APIMessage {
     public static final String INSTRUCTOR_ALREADY_PRESENT = "Instructor with same %s Already Exists";
     public static final String INSTRUCTOR_CREATED = "Instructor Created";
     // --------- End --------
+
+
+    // ---------- course Entrollment Service ------
+    public static final String COURSE_ENROLLMENT_FOUND = "course enrollment found";
+    public static final String COURSE_ENROLLMENT_NOT_FOUND = "course enrollment not found";
+    public static final String COURSE_ENROLLMENT_MAX_LIMIT_REACHED = "course enrollment max limit reached";
+    public static final String COURSE_ENROLLMENT_CREATED = "Instructor Created";
+    public static final String COURSE_ENROLLMENT_UPDATED = "Instructor Updated";
+    public static final String STUDENT_ALREADY_ENROLLED = "student already enrolled for this course";
+    public static final String COURSE_ENROLLMENT_DELETED = "Instructor Deleted";
+
+    // --------- End --------
+
 }

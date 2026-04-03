@@ -8,7 +8,9 @@ import com.example.sms.entity.Course;
 import com.example.sms.entity.Instructor;
 import com.example.sms.entity.enums.Category;
 import com.example.sms.entity.enums.Status;
+import com.example.sms.exception.NotFoundExceptionResource;
 import com.example.sms.util.APIMessage;
+import com.example.sms.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -68,16 +70,12 @@ public class CourseService {
                 .map(CourseDTO::toDTO)
                 .toList();
 
-        Map<String, Object> pageResult = new HashMap<>();
-        pageResult.put("pageSize", pageSize);
-        pageResult.put("pageNo", pageNo);
-        pageResult.put("totalRecords", courses.getTotalElements());
-        pageResult.put("pageCount", courses.getTotalPages());
+
 
 
         Map<String, Object> result = new HashMap<>();
         result.put("data", dtos);
-        result.put("pageResult", pageResult);
+        result.put("pageResult", Utils.preparePageResult(courses));
 
         return ResponseModel.success(
                 APIMessage.COURSE_FOUND,
@@ -180,11 +178,10 @@ public class CourseService {
                     APIMessage.COURSE_FOUND,
                     result
             );
-        } catch (Exception e) {
-            return ResponseModel.not_found(
-                    APIMessage.CATEGORY_NOT_FOUND,
-                    null
-            );
+        } catch (IllegalArgumentException e) {
+         throw new NotFoundExceptionResource(APIMessage.CATEGORY_NOT_FOUND);
+        }catch (Exception e) {
+            throw e;
         }
 
 

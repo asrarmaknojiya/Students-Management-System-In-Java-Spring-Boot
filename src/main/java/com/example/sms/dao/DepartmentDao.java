@@ -20,15 +20,15 @@ public class DepartmentDao extends BasicCRUD<Department, String> {
         this.departmentRepo = departmentRepo;
     }
 
-    public boolean existsByDepartment(String departmentName) {
+public boolean existByDepartmentName(String departmentName){
         return departmentRepo.existsByDepartmentName(departmentName);
-    }
+}
 
-    public Page<Department> findAllByStatus(Status status, Pageable pageable) {
-        return departmentRepo.findAllByStatus(status, pageable);
-    }
+public Page<Department> findAllByStatus(Status status,Pageable pageable){
+        return departmentRepo.findAllDepartmentByStatus(status,pageable);
+}
 
-    public Page<Department> searchDepartmentByStatus(String searchKeyword, Status status, Pageable pageable){
-        return departmentRepo.searchDepartmentByStatus("%" + searchKeyword + "%", status, pageable);
-    }
+public boolean existsByDepartmentName(String departmentName){
+        return departmentRepo.existsByDepartmentName(departmentName);
+}
 }
